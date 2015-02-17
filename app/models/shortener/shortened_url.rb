@@ -1,7 +1,7 @@
 class Shortener::ShortenedUrl < ActiveRecord::Base
 
-  URL_PROTOCOL_HTTP = "http://"
-  REGEX_LINK_HAS_PROTOCOL = Regexp.new('\Ahttp:\/\/|\Ahttps:\/\/', Regexp::IGNORECASE)
+  # URL_PROTOCOL_HTTP = ""
+  # REGEX_LINK_HAS_PROTOCOL = Regexp.new('\Ahttp:\/\/|\Ahttps:\/\/', Regexp::IGNORECASE)
 
   validates :url, :presence => true
 
@@ -9,11 +9,11 @@ class Shortener::ShortenedUrl < ActiveRecord::Base
   belongs_to :owner, :polymorphic => true
 
   # ensure the url starts with it protocol and is normalized
-  def self.clean_url(url)
-    return nil if url.blank?
-    url = URL_PROTOCOL_HTTP + url.strip unless url =~ REGEX_LINK_HAS_PROTOCOL
-    URI.parse(url).normalize.to_s
-  end
+  # def self.clean_url(url)
+  #   return nil if url.blank?
+  #   url = URL_PROTOCOL_HTTP + url.strip unless url =~ REGEX_LINK_HAS_PROTOCOL
+  #   URI.parse(url).normalize.to_s
+  # end
 
   # generate a shortened link from a url
   # link to a user if one specified
@@ -27,7 +27,7 @@ class Shortener::ShortenedUrl < ActiveRecord::Base
 
     # don't want to generate the link if it has already been generated
     # so check the datastore
-    cleaned_url = clean_url(orig_url)
+    cleaned_url = orig_url
     scope = owner ? owner.shortened_urls : self
     scope.where(:url => cleaned_url).first_or_create
   end
